@@ -1,0 +1,60 @@
+					----SECTION 2----
+1. List the name, employee code and designation of each employee of the office
+->SELECT empname,empcode,desigcode from emp;
+
+2. List all the departments and the budgets
+->SELECT * from dept;
+
+3. List the employees and their respective department names
+->SELECT empname,deptname FROM emp JOIN dept USING(deptcode);
+
+4. List the employees who are not having any superior to work under
+->SELECT * FROM emp WHERE supcode IS NULL; 
+
+5. List the employees who are working directly under superior most employee of the
+office. (Assume the superior most employee is the employee who does not have a
+supervisor)
+->SELECT * FROM emp where supcode IN(SELECT empcode FROM emp WHERE supcode IS NULL);
+
+6. List the employee(s) who is senior most in the office
+->SELECT * from emp where joindate=(SELECT min(joindate) FROM emp);
+
+7. List the employees who will retire from the office next.
+->SELECT *,YEAR(NOW())-YEAR(birthdate) AS age FROM emp WHERE YEAR(NOW())-YEAR(birthdate)>60;
+
+8. List the departments with the respective department managers
+->SELECT empname,desigcode,deptname,deptcode  FROM emp JOIN dept USING(deptcode) WHERE desigcode="MNGR";
+
+9. List the employees who work as ‘manager’ to at least one department.
+->SELECT * FROM emp WHERE desigcode="MNGR";
+
+10. List the number of employees working for either ‘accounts’ or ‘personal’ or ‘purchase’ departments
+->SELECT * FROM emp WHERE deptcode IN ("ACCT","PERS","PRCH");
+
+11. List the employees working for ‘accounts’ or ‘personal’ department
+->SELECT * FROM emp WHERE deptcode = "ACCT" OR deptcode = "PERS";
+
+12. List the employees working for ‘accounts’ and ‘personal’ department
+->SELECT * FROM emp WHERE deptcode = "ACCT" AND deptcode = "PERS";
+
+13. List the employees working for ‘accounts’ but not for ‘personal’ department
+->SELECT * FROM emp WHERE deptcode = "ACCT" AND deptcode NOT IN ("PERS");
+
+14. List the youngest employee of the office
+->SELECT * from emp where YEAR(birthdate) =(SELECT MAX(YEAR(birthdate)) FROM emp);
+
+15. List the employees who are drawing basic pay not equal to 12400.
+->SELECT * from emp where basicpay <> 12400;
+
+16. List the employees who are drawing basic salary between 11000 and 12000.
+->SELECT * from emp where basicpay BETWEEN 11000 AND 12000;
+
+17. List the employees who are drawing basic salary not between 11000 and 12000
+->SELECT * from emp where basicpay NOT BETWEEN 11000 AND 12000;
+
+18. List the employees who got salary allowance between Rs.1000 to Rs.1500 in the month of January 2012.
+->SELECT * from emp JOIN salary USING(empcode) where (allow BETWEEN 1000 AND 1500)
+AND (salmonth>='2012-01-01' AND salmonth < '2012-02-01');
+
+19. List the employees whose name ends with ‘i’ or ‘y’.
+->SELECT empname from emp WHERE empname LIKE '%y' OR empname LIKE '%i';
