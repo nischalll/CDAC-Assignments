@@ -58,3 +58,65 @@ AND (salmonth>='2012-01-01' AND salmonth < '2012-02-01');
 
 19. List the employees whose name ends with ‘i’ or ‘y’.
 ->SELECT empname from emp WHERE empname LIKE '%y' OR empname LIKE '%i';
+
+20. List the employees who have atleast 25 years of experience
+->SELECT * from emp WHERE YEAR(NOW())-YEAR(joindate)>25;
+
+21. List the ‘Salesmen’ who have minimum 30 to 20 years of experience
+->SELECT *,YEAR(NOW())-YEAR(joindate) exp from emp WHERE deptcode='SALE' AND YEAR(NOW())-YEAR(joindate)BETWEEN 20 AND 30;
+
+22. List the basic salary and half of the basic salary for each employee.
+->SELECT empname, basicpay, basicpay/2 half_of_basic FROM emp;
+
+23. List the employees and the latest take-home-pay of each employee. (Hint: Take-home-pay = basic + allowance - deductions)
+-> SELECT empname,((basic+allow)-deduct) AS 'take-home-pay' FROM emp JOIN salary USING(empcode) where salmonth =(SELECT max(salmonth) FROM salary);
+
+24. List the employees and the latest take-home-pay of each employee of ‘Accounts’ department.
+->SELECT empname, deptcode,((basic+allow)-deduct) AS 'take-home-pay' FROM emp JOIN salary USING(empcode) where salmonth =(SELECT max(salmonth) FROM salary) AND deptcode='ACCT';
+
+25. List employees and their respective ages.
+->SELECT empname, YEAR(NOW())-YEAR(birthdate) AS AGE FROM emp;
+
+26. List all the ‘Accounts’ department employees, first ordered by their age and then by their names.
+->SELECT * FROM emp WHERE deptcode='ACCT' ORDER BY birthdate,empname;
+
+27. List the number of employees directly reporting to ‘Reddy’
+->SELECT * FROM emp WHERE supcode=(select empcode from emp where empname='reddy');
+
+28. List the employees who have atleast one person working under him/her and the number of their subordinates. List the employee with highest number of subordinates first, next the person with next highest number of subordinates and so on.
+->SELECT * FROM emp WHERE empcode IN (SELECT supcode FROM emp);
+
+29. List the employees who have minimum 3 employees working under him/her.
+
+
+30. List the minimum and maximum salaries drawn in each grade code.
+31. List the employees with names of their supervisors (Hint: Use Join).
+32. List the number of officers reporting to each supervisor having more than 3
+people working under them
+33. List the employees who have not got any promotion till now.
+34. List the employee with maximum number of promotions. Also list the number of
+promotions that he/she got.
+35. List the employees who got promoted in the year 1991.
+36. List the department budget and the total salary drawn (by the employees of this department).
+37. Display the employee names in full uppercase.
+38. List all the employees drawing salary higher than the salary drawn by ‘Jain’
+39. List all the employees who have higher salary than all the employees who draw
+salary in the range of 11000 to 12000.
+40. List all the employees who have greater than average pay. Display the result in the
+increasing order of the salary.
+41. List the employees who draws highest salary
+42. List all the employees other than the employees who draw highest salary
+43. List the employees who draw highest salary in each department
+44. List the employee(s) getting second highest salary
+45.List the employee(s) who are getting fifth highest salary.
+46. List the female employee who draws the highest salary higher than any other
+female employee
+47. List the department name of the female employee who draws the highest salary
+higher than any other female employee
+48. List the department manager of the department, in which the female employee
+who draws the highest salary higher than any other female employee works in
+49. List all male employees who draw salary greater than atleast on female employee
+50. List the departments in which average salary of employees is more than average
+salary of the company
+51. List the employees drawing salary lesser than the average salary of employees
+working for ‘accounts’ department
