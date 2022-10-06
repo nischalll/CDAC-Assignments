@@ -87,36 +87,104 @@ AND (salmonth>='2012-01-01' AND salmonth < '2012-02-01');
 ->SELECT * FROM emp WHERE empcode IN (SELECT supcode FROM emp);
 
 29. List the employees who have minimum 3 employees working under him/her.
-
+-> SELECT supcode,count(empcode) FROM emp WHERE supcode IN
+	(SELECT empcode FROM emp WHERE empcode IN
+	(SELECT DISTINCT supcode from emp)
+	)
+	GROUP BY supcode
+	having count(empcode)>3
 
 30. List the minimum and maximum salaries drawn in each grade code.
+-> SELECT gradecode,MAX(basicpay),MIN(basicpay) FROM emp GROUP BY gradecode;
+
 31. List the employees with names of their supervisors (Hint: Use Join).
+->SELECT e.empcode, e.empname, sup.empcode, sup.empname FROM emp e JOIN 
+	(SELECT * FROM emp WHERE empcode IN(SELECT DISTINCT supcode FROM emp)) AS sup
+	ON e.supcode=sup.empcode
+
 32. List the number of officers reporting to each supervisor having more than 3
 people working under them
+-> SELECT supcode,count(empcode) AS no_of_emp from emp group by supcode>3;
+
 33. List the employees who have not got any promotion till now.
+->SELECT * FROM emp WHERE empcode NOT IN(SELECT DISTINCT empcode FROM history);
+
 34. List the employee with maximum number of promotions. Also list the number of
 promotions that he/she got.
+->SELECT DISTINCT empcode, empname, count(changedate)AS 
+	no_of_promotions FROM history
+	JOIN emp USING(empcode)
+	GROUP BY empcode ORDER BY no_of_promotions DESC;
+
 35. List the employees who got promoted in the year 1991.
+->SELECT empcode, empname, changedate from history JOIN emp USING(empcode) WHERE YEAR(changedate)=1991;
+
 36. List the department budget and the total salary drawn (by the employees of this department).
+->SELECT empcode,empname,deptcode,deptname,budget, basicpay from dept JOIN emp USING(deptcode);
+
 37. Display the employee names in full uppercase.
+->SELECT empcode,UPPER(empname) from emp;
+
 38. List all the employees drawing salary higher than the salary drawn by ‘Jain’
+->SELECT * from emp WHERE basicpay>(SELECT basicpay from emp where empname='Jain');
+
 39. List all the employees who have higher salary than all the employees who draw
 salary in the range of 11000 to 12000.
+->SELECT * FROM emp WHERE basicpay > (SELECT AVG(basicpay) from emp WHERE basicpay BETWEEN 11000 AND 12000);
+
 40. List all the employees who have greater than average pay. Display the result in the
 increasing order of the salary.
+->SELECT * FROM emp WHERE basicpay > (SELECT AVG(basicpay) from emp);
+
 41. List the employees who draws highest salary
+->SELECT * FROM emp WHERE basicpay > (SELECT AVG(basicpay) from emp) ORDER BY basicpay DESC;
+
 42. List all the employees other than the employees who draw highest salary
+-> SELECT * FROM emp WHERE basicpay <> (SELECT MAX(basicpay) from emp);
+
 43. List the employees who draw highest salary in each department
+-> SELECT * from emp e where basicpay=(SELECT MAX(basicpay) from emp WHERE deptcode = e.deptcode);
+
 44. List the employee(s) getting second highest salary
+-> SELECT basicpay FROM 
+	(SELECT basicpay FROM emp order by basicpay DESC LIMIT 2) 
+	AS employee ORDER BY basicpay LIMIT 1;
+
 45.List the employee(s) who are getting fifth highest salary.
+-> SELECT basicpay FROM 
+	(SELECT basicpay FROM emp order by basicpay DESC LIMIT 5) 
+	AS employee order by basicpay LIMIT 1;
+
 46. List the female employee who draws the highest salary higher than any other
 female employee
+->SELECT basicpay FROM emp WHERE SEX='F' order by basicpay DESC LIMIT 1;
+
 47. List the department name of the female employee who draws the highest salary
 higher than any other female employee
+->SELECT basicpay, deptname FROM emp JOIN dept USING(deptcode) WHERE SEX='F' order by basicpay DESC LIMIT 1;
+
 48. List the department manager of the department, in which the female employee
 who draws the highest salary higher than any other female employee works in
-49. List all male employees who draw salary greater than atleast on female employee
+-> SELECT * FROM emp WHERE 
+	deptcode= (SELECT deptcode FROM emp WHERE SEX='F' order by basicpay DESC LIMIT 1)
+	AND
+	desigcode ="MNGR";
+
+49. List all male employees who draw salary greater than atleast one female employee
+->SELECT * FROM emp WHERE 
+	basicpay > (SELECT basicpay FROM emp WHERE SEX='F' order by basicpay LIMIT 1);
+
+
 50. List the departments in which average salary of employees is more than average
 salary of the company
+->SELECT deptcode,AVG(basicpay) AS avg_sal_dept, 
+	(SELECT AVG(basicpay) from emp) AS avg_sal_dep 
+	FROM emp GROUP BY deptcode 
+	having avg_sal_dept>(SELECT AVG(basicpay) from emp);
+
 51. List the employees drawing salary lesser than the average salary of employees
 working for ‘accounts’ department
+->SELECT *,(SELECT AVG(basicpay) from emp where deptcode='ACCT') AS avg_salary_acct FROM emp 
+	where basicpay < (SELECT AVG(basicpay) from emp where deptcode='ACCT');
+
+
