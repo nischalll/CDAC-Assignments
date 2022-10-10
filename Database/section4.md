@@ -5,7 +5,7 @@ CREATE INDEX emp_index ON emp(birthdate);
 
 2.Create unique index dept_index on table dept on the field deptname.
 ```sql
-CREATE INDEX dept_index ON dept(deptname);
+CREATE UNIQUE INDEX dept_index ON dept(deptname);
 ```
 
 3.Create students table, with filed id, name, age, gender, index on id
