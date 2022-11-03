@@ -1,6 +1,6 @@
 package BankAccount;
 
-public class BankAccount {
+public class BankAccount implements CreditCard {
 	public int accountNumber;
 	public int totalBalance;
 
@@ -25,6 +25,21 @@ public class BankAccount {
 	public void printAccount(){
 		System.out.println("Account Number: "+accountNumber);
 		System.out.println("Total Balance: "+totalBalance);
+	}
+
+	@Override
+	public void rupees() {
+		System.out.println("rupees credit card");
+	}
+
+	@Override
+	public void dollars() {
+		System.out.println("dollars credit card");
+	}
+
+	@Override
+	public void pounds() {
+		System.out.println("pounds credit card");
 	}
 }
 
